@@ -27,16 +27,16 @@ public class Explosion : MonoBehaviour
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, _explosionRadius);
 
-        List<Rigidbody> barrels = new();
+        List<Rigidbody> cubs = new();
 
         foreach (Collider hit in hits)
         {
             if (hit.attachedRigidbody != null)
             {
-                barrels.Add(hit.attachedRigidbody);
+                cubs.Add(hit.attachedRigidbody);
             }
         }
 
-        return barrels;
+        return cubs;
     }
 }
