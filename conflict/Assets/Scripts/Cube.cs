@@ -2,8 +2,12 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    public void Disappear()
+    private float _maxChance = 100f;
+
+    public float MaxChance => _maxChance;
+
+    public void SetChance(float newChance)
     {
-        Destroy(gameObject);
+        _maxChance = newChance;
     }
 }
