@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public static class ColorChange
+public class ColorChange:MonoBehaviour
 {
-    public static void ApplyRandomColor(GameObject gameObject)
+    public void ApplyRandomColor(Cube cube)
     {
-        Renderer renderer = gameObject.GetComponent<Renderer>();
+        Renderer renderer = cube.GetComponent<Renderer>();
 
         if(renderer != null)
         {

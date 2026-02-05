@@ -1,13 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Handler : MonoBehaviour
+public class Splitter : MonoBehaviour
 {
     [SerializeField] private PlayerInput _input;
     [SerializeField] private RaycastLaunch _raycast;
     [SerializeField] private Spawner _spawner;
+    [SerializeField] private ExplosionForceApplier _force;
 
     private int _minCubs = 2;
     private int _maxCubs = 6;
@@ -17,14 +16,14 @@ public class Handler : MonoBehaviour
 
     public void Start()
     {
-        _input.OnMouseClicked += OnScreenClick;
+        _input.MouseClicked += OnScreenClick;
     }
 
     private void OnScreenClick(Vector2 screenPos)
     {
         if(_raycast.TryGetClickedObject(screenPos, out GameObject hitObgect))
         {
-            if(hitObgect.TryGetComponent<Cube>(out Cube cube))
+            if(hitObgect.TryGetComponent(out Cube cube))
             {
                 HandleCubeClick(cube);
             }
@@ -41,15 +40,24 @@ public class Handler : MonoBehaviour
 
             int count = Random.Range(_minCubs, _maxCubs);
 
-            for (int i = 0; i < count; i++)
-            {
-                GameObject child = _spawner.Spawn(cube.transform.position, cube.transform.localScale, cube.MaxChance);
-                children.Add(child.GetComponent<Rigidbody>());
-            }
+            SpawnObject(count, cube, children);
 
-            ExplosionForceApplier.Apply(children, cube.transform.position, _explosionForce);
+            _force.Apply(children, cube.transform.position, _explosionForce);
         }
 
-        Destroy(cube.gameObject);
+        _spawner.DestroyObject(cube);
+    }
+
+    private void SpawnObject(int count, Cube cube, List<Rigidbody> cubes)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Cube child = _spawner.Spawn(cube.transform.position, cube.transform.localScale, cube.MaxChance);
+            
+            if(child.TryGetComponent(out Rigidbody rigidbody))
+            {
+                cubes.Add(rigidbody);
+            }
+        }
     }
 }

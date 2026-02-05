@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ExplosionForceApplier
+public class ExplosionForceApplier: MonoBehaviour
 { 
-    private static int _explosionRadius = 0;
+    private int _explosionRadius = 0;
 
-    public static void Apply(List<Rigidbody> children, Vector3 explosionCenter, float _explosionForce)
+    public void Apply(List<Rigidbody> children, Vector3 explosionCenter, float _explosionForce)
     {
         foreach (var child in children)
         {

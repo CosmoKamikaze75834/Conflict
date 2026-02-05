@@ -2,22 +2,32 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private GameObject _cubePrefab;
+    [SerializeField] private Cube _cubePrefab;
+    [SerializeField] private ColorChange _color;
 
     private float _multeplier = 0.5f;
     private float _currentChance = 2;
 
-    public GameObject Spawn(Vector3 position, Vector3 parentScale, float parentChance)
+    public Cube Spawn(Vector3 position, Vector3 parentScale, float parentChance)
     {
-        GameObject child = Instantiate(_cubePrefab, position, Quaternion.identity);
+        Cube child = Instantiate(_cubePrefab, position, Quaternion.identity);
 
         child.transform.localScale = parentScale * _multeplier;
 
-        Cube cubeScript = child.GetComponent<Cube>();
+        if (!child.TryGetComponent(out Cube cubeScript))
+        {
+            return null;
+        }
+
         cubeScript.SetChance(parentChance / _currentChance);
 
-        ColorChange.ApplyRandomColor(child);
+        _color.ApplyRandomColor(child);
 
         return child;
+    }
+
+    public void DestroyObject(Cube cube)
+    {
+        Destroy(cube.gameObject);
     }
 }
